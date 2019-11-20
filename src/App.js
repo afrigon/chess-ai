@@ -5,53 +5,68 @@ import Chess from "chess.js";
 import Chessboard from "chessboardjsx";
 import ChessWeight from "./ChessWeight";
 
+const minimaxDepth = 3;
+
 export default function App() {
     const [game, setGame] = useState(new Chess());
     const [fen, setFen] = useState("start");
 
-    const randomMove = () => {
+    const minimaxRoot = (depth, wantMax) => {
         const moves = game.moves();
         if (game.game_over() || game.in_draw() || moves.length === 0) return;
 
-        const i = Math.floor(Math.random() * moves.length);
-        game.move(moves[i]);
-        setFen(game.fen());
-        setGame(game);
-    }
-
-    const greedyMove = () => {
-        const moves = game.moves();
-        if (game.game_over() || game.in_draw() || moves.length === 0) return;
-
-        let best = 9999;
+        let best = -9999;
         let bestMove;
         for (let i = 0; i < moves.length; ++i) {
             game.move(moves[i]);
-            const value = evalBoard(game);
+            const value = minimax(depth - 1, -10000, 10000, !wantMax);
+            game.undo();
             
-            if (value < best) {
+            if (value >= best) {
                 best = value;
                 bestMove = moves[i];
             }
-
-            game.undo();
         }
 
         game.move(bestMove);
-
         setFen(game.fen());
         setGame(game);
+    };
+
+    const minimax = (depth, alpha, beta, wantMax) => {
+        if (depth === 0) return -evalBoard(game);
+
+        var moves = game.moves();
+        let best = 9999 * wantMax ? -1 : 1;
+
+        for (let i = 0; i < moves.length; ++i) {
+            game.move(moves[i]);
+            const bestChild = minimax(depth - 1, alpha, beta, !wantMax);
+            game.undo()
+
+            if (wantMax) {
+                best = Math.max(best, bestChild);
+                alpha = Math.max(alpha, best);
+            } else {
+                best = Math.min(best, bestChild);
+                beta = Math.min(beta, best);
+            }
+
+            if (beta <= alpha) return best;
+        }
+        return best
     }
 
-    const makeMove = greedyMove
+    const makeMove = () => {
+        if (game.game_over()) alert('Game over');
+        minimaxRoot(minimaxDepth, true)
+    };
 
     const evalBoard = g => {
-        const columns = ["a", "b", "c", "d", "e", "f", "g", "h"];
-
         let score = 0;
         for (var i = 0; i < 8; ++i) {
             for (var j = 0; j < 8; ++j) {
-                score += evalPiece(g.get(columns[i] + (8-j)), i ,j);
+                score += evalPiece(g.get(String.fromCharCode(i+0x61) + (8-j)), i ,j);
             }
         }
         return score;
@@ -77,7 +92,7 @@ export default function App() {
             setFen(game.fen());
             setGame(game);
             resolve();
-        }).then(() => setTimeout(makeMove, 300));
+        }).then(setTimeout(makeMove, 300));
     }
 
     return (
