@@ -13,7 +13,7 @@ Requirements:
 - Node.js
 - NPM
 
-This application uses [react-scripts](https://create-react-app.dev/).
+This application uses [react-scripts](https://create-react-app.dev/) to bootstrap the application.
 
 ### Setup
 
