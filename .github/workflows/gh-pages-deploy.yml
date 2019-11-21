@@ -29,7 +29,7 @@ jobs:
       run: |
         npm run build
 
-    - name: Authenticate to the repository
+    - name: Authenticating with the repository
       run: | 
         git remote set-url origin https://afrigon:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
 
