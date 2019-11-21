@@ -19,7 +19,12 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - name: Deploy on GitHub Pages
+    - name: Installing dependencies
       run: |
         npm install
+    - name: Building the application
+      run: |
+        npm run build
+    - name: Deploying on GitHub Pages
+      run: |
         npm run deploy
