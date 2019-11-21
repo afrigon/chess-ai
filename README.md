@@ -51,6 +51,6 @@ npm run deploy
 
 ...
 
-## Liscence
+## License
 
 ...
