@@ -4,7 +4,7 @@ A simple [React](https://reactjs.org/) application to play [chess](https://en.wi
 
 ## Demo
 
-https://afrigon.github.io/chess-ai/
+A live demo of the application is available at [https://afrigon.github.io/chess-ai](https://afrigon.github.io/chess-ai)
 
 ## Development
 
@@ -19,13 +19,13 @@ This application uses [react-scripts](https://create-react-app.dev/) to bootstra
 
 Install dependencies:
 
-```shell
+```sh
 npm install
 ```
 
 Runs the application in the development mode:
 
-```shell
+```sh
 npm start
 ```
 
@@ -35,21 +35,25 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser. T
 
 Builds the application for production to the `build` folder:
 
-```shell
+```sh
 npm run build
 ```
 
 ### Deploy
 
+This step should be done automatically by the CD
+
 Deploy the application on [GitHub Pages](https://pages.github.com/):
 
-```shell
+```sh
 npm run deploy
 ```
 
 ## Test
 
-...
+```sh
+npm run test
+```
 
 ## License
 
