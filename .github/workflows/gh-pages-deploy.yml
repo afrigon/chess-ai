@@ -15,16 +15,25 @@ jobs:
 
     steps:
     - uses: actions/checkout@v1
+
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
+
     - name: Installing dependencies
       run: |
         npm install
+
     - name: Building the application
       run: |
         npm run build
+
+    - name: Authenticate to the repository
+      run: | 
+        git remote set-url origin https://afrigon:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
+
     - name: Deploying on GitHub Pages
       run: |
-        npm run deploy
+        ./node_modules/gh-pages/bin/gh-pages.js -d build -u 'Github Actions <github@frigon.app>'
+

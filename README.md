@@ -41,10 +41,12 @@ npm run build
 
 ### Deploy
 
+This step should be done automatically by the CD
+
 Deploy the application on [GitHub Pages](https://pages.github.com/):
 
 ```sh
-npm run build && npm run deploy
+npm run deploy
 ```
 
 ## Test
