@@ -37,6 +37,7 @@ export default function App() {
     return (
         <div className="App">
             <Chessboard
+                draggable={!game.game_over()}
                 width={540}
                 position={fen}
                 onDrop={onDrop}
