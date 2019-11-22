@@ -12,13 +12,8 @@ export default function App() {
     const [fen, setFen] = useState("start");
 
     const onDrop = ({ sourceSquare, targetSquare }) => {
-      // NOTE: I don't think this code does anything, maybe remove it.
-      const move = game.move({
-          from: sourceSquare,
-          to: targetSquare,
-          promotion: "q"
-      });
-
+      // Attempts to make the player's move.
+      const move = game.move({ from: sourceSquare, to: targetSquare });
       if (!move) return;
 
       return new Promise(resolve => {
@@ -30,6 +25,7 @@ export default function App() {
             if (game.game_over()) {
               alert('Game over');
             } else {
+              // Get the AI's best move and attempts to make the move.
               game.move(bestMove(game, minimaxDepth));
               setFen(game.fen());
               setGame(game);
