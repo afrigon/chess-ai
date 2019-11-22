@@ -1,17 +1,19 @@
 import ChessWeight from "./ChessWeight";
 
-export function evalPiece (p, x, y) {
-  if (!p) return 0;
+export function evalPiece (piece, x, y) {
+  if (!piece) return 0;
 
-  const value = ChessWeight[p.type][p.color][y][x] + ChessWeight[p.type].modifier;
-  return p.color === "w" ? value : -value;
+  const value = ChessWeight[piece.type][piece.color][y][x] + ChessWeight[piece.type].modifier;
+  return piece.color === "w" ? value : -value;
 }
 
-export function evalBoard (g) {
+export function evalBoard (game) {
   let score = 0;
-  for (var i = 0; i < 8; ++i) {
-      for (var j = 0; j < 8; ++j) {
-          score += evalPiece(g.get(String.fromCharCode(i+0x61) + (8-j)), i ,j);
+  for (var x = 0; x < 8; ++x) {
+      for (var y = 0; y < 8; ++y) {
+        const square = String.fromCharCode(x + 0x61) + (8-y);
+        const piece = game.get(square);
+        score += evalPiece(piece, x, y);
       }
   }
   return score;
