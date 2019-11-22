@@ -30,7 +30,7 @@ export default function App() {
               const now = Date.now();
               const bestMove = getBestMove(game, algorithm);
               const elapsedTimeInSeconds = ((Date.now() - now) / 1000).toFixed(2);
-              if (debug) console.log(`AI tinking time: ${elapsedTimeInSeconds} seconds`);
+              if (debug) console.log(`AI thinking time: ${elapsedTimeInSeconds} seconds`);
 
               if (game.move(bestMove)) {
                 setFen(game.fen());
