@@ -9,7 +9,7 @@ export function evalPiece (piece, x, y) {
   return piece.color === "w" ? value : -value;
 }
 
-export function evalBoard (game) {
+export function evalGame (game) {
   let score = 0;
   for (var x = 0; x < 8; ++x) {
       for (var y = 0; y < 8; ++y) {
@@ -41,7 +41,7 @@ export function getAlphabetaBestMove (game, depth, wantMax) {
 };
 
 export function alphabeta (game, depth, alpha, beta, wantMax) {
-  if (depth === 0) return -evalBoard(game);
+  if (depth === 0) return -evalGame(game);
 
   var moves = game.moves();
   let best = wantMax ? Number.MIN_SAFE_INTEGER : Number.MAX_SAFE_INTEGER;
