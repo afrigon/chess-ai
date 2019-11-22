@@ -11,7 +11,7 @@ export function getMinimaxBestMove (game, depth, wantMax) {
   let bestMove;
   for (let i = 0; i < moves.length; ++i) {
       game.move(moves[i]);
-      const value = minimax(game, depth - 1, Number.MIN_SAFE_INTEGER, Number.MAX_SAFE_INTEGER, !wantMax);
+      const value = minimax(game, depth - 1, !wantMax);
       game.undo();
 
       if (value >= best) {
@@ -25,23 +25,21 @@ export function getMinimaxBestMove (game, depth, wantMax) {
 export function minimax (game, depth, wantMax) {
   if (depth === 0) return -evalGame(game);
 
-  if (wantMax) {
-    let value = Number.MIN_SAFE_INTEGER;
-    game.moves().forEach((move) => {
-      game.move(move);
-      value = Math.max(minimax(game, depth - 1, false));
-      game.undo();
-    })
-    return value;
-  } else {
-    let value = Number.MAX_SAFE_INTEGER;
-    game.moves().forEach((move) => {
-      game.move(move);
-      value = Math.min(minimax(game, depth - 1, true));
-      game.undo();
-    })
-    return value;
+  var moves = game.moves();
+  let best = wantMax ? Number.MIN_SAFE_INTEGER : Number.MAX_SAFE_INTEGER;
+
+  for (let i = 0; i < moves.length; ++i) {
+      game.move(moves[i]);
+      const bestChild = minimax(game, depth - 1, !wantMax);
+      game.undo()
+
+      if (wantMax) {
+          best = Math.max(best, bestChild);
+      } else {
+          best = Math.min(best, bestChild);
+      }
   }
+  return best
 }
 
 export function getAlphabetaBestMove (game, depth, wantMax) {
