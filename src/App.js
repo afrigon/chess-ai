@@ -3,9 +3,9 @@ import './App.css';
 
 import Chess from "chess.js";
 import Chessboard from "chessboardjsx";
-import { bestMove } from "./ai"
+import { getBestMove } from "./ai"
 
-const minimaxDepth = 3;
+const algorithm = 'random';
 
 export default function App() {
     const [game, setGame] = useState(new Chess());
@@ -26,9 +26,13 @@ export default function App() {
               alert('Game over');
             } else {
               // Get the AI's best move and attempts to make the move.
-              game.move(bestMove(game, minimaxDepth));
-              setFen(game.fen());
-              setGame(game);
+              const bestMove = getBestMove(game, algorithm);
+              if (game.move(bestMove)) {
+                setFen(game.fen());
+                setGame(game);
+              } else {
+                alert("Can't play");
+              }
             }
           }, 300)
       });

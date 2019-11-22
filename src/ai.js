@@ -1,5 +1,7 @@
 import ChessWeight from "./ChessWeight";
 
+const alphabetaDepth = 3;
+
 export function evalPiece (piece, x, y) {
   if (!piece) return 0;
 
@@ -19,7 +21,7 @@ export function evalBoard (game) {
   return score;
 }
 
-export function minimaxBestMove (game, depth, wantMax) {
+export function getAlphabetaBestMove (game, depth, wantMax) {
   const moves = game.moves();
   if (game.game_over() || game.in_draw() || moves.length === 0) return;
 
@@ -27,7 +29,7 @@ export function minimaxBestMove (game, depth, wantMax) {
   let bestMove;
   for (let i = 0; i < moves.length; ++i) {
       game.move(moves[i]);
-      const value = minimax(game, depth - 1, -10000, 10000, !wantMax);
+      const value = alphabeta(game, depth - 1, -10000, 10000, !wantMax);
       game.undo();
 
       if (value >= best) {
@@ -38,7 +40,7 @@ export function minimaxBestMove (game, depth, wantMax) {
   return bestMove;
 };
 
-export function minimax (game, depth, alpha, beta, wantMax) {
+export function alphabeta (game, depth, alpha, beta, wantMax) {
   if (depth === 0) return -evalBoard(game);
 
   var moves = game.moves();
@@ -46,7 +48,7 @@ export function minimax (game, depth, alpha, beta, wantMax) {
 
   for (let i = 0; i < moves.length; ++i) {
       game.move(moves[i]);
-      const bestChild = minimax(game, depth - 1, alpha, beta, !wantMax);
+      const bestChild = alphabeta(game, depth - 1, alpha, beta, !wantMax);
       game.undo()
 
       if (wantMax) {
@@ -62,6 +64,19 @@ export function minimax (game, depth, alpha, beta, wantMax) {
   return best
 }
 
-export function bestMove (game, minimaxDepth) {
-  return minimaxBestMove(game, minimaxDepth, true);
+export function getRandomMove (game) {
+  let moves = game.moves();
+  var index = Math.floor(Math.random() * moves.length);
+  return moves[index];
+}
+
+export function getBestMove (game, algorithm) {
+  switch (algorithm) {
+    case 'alpha-beta':
+      return getAlphabetaBestMove(game, alphabetaDepth, true);
+    case 'random':
+      return getRandomMove(game);
+    default:
+      throw new Error(`No such algorithm "${algorithm}"`)
+  }
 }
