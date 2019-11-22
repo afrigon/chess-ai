@@ -25,11 +25,11 @@ export function getAlphabetaBestMove (game, depth, wantMax) {
   const moves = game.moves();
   if (game.game_over() || game.in_draw() || moves.length === 0) return;
 
-  let best = -9999;
+  let best = Number.MIN_SAFE_INTEGER;
   let bestMove;
   for (let i = 0; i < moves.length; ++i) {
       game.move(moves[i]);
-      const value = alphabeta(game, depth - 1, -10000, 10000, !wantMax);
+      const value = alphabeta(game, depth - 1, Number.MIN_SAFE_INTEGER, Number.MAX_SAFE_INTEGER, !wantMax);
       game.undo();
 
       if (value >= best) {
@@ -44,7 +44,7 @@ export function alphabeta (game, depth, alpha, beta, wantMax) {
   if (depth === 0) return -evalBoard(game);
 
   var moves = game.moves();
-  let best = 9999 * wantMax ? -1 : 1;
+  let best = wantMax ? Number.MIN_SAFE_INTEGER : Number.MAX_SAFE_INTEGER;
 
   for (let i = 0; i < moves.length; ++i) {
       game.move(moves[i]);
