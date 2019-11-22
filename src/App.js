@@ -5,7 +5,8 @@ import Chess from "chess.js";
 import Chessboard from "chessboardjsx";
 import { getBestMove } from "./ai"
 
-const algorithm = 'random';
+const debug = true;
+const algorithm = 'alpha-beta';
 
 export default function App() {
     const [game, setGame] = useState(new Chess());
@@ -26,7 +27,11 @@ export default function App() {
               alert('Game over');
             } else {
               // Get the AI's best move and attempts to make the move.
+              const now = Date.now();
               const bestMove = getBestMove(game, algorithm);
+              const elapsedTimeInSeconds = ((Date.now() - now) / 1000).toFixed(2);
+              if (debug) console.log(`AI tinking time: ${elapsedTimeInSeconds} seconds`);
+
               if (game.move(bestMove)) {
                 setFen(game.fen());
                 setGame(game);
