@@ -1,5 +1,6 @@
 import ChessWeight from "./ChessWeight";
 
+const minimaxDepth = 3;
 const alphabetaDepth = 3;
 
 export function evalPiece (piece, x, y) {
@@ -19,6 +20,47 @@ export function evalGame (game) {
       }
   }
   return score;
+}
+
+export function getMinimaxBestMove (game, depth, wantMax) {
+  const moves = game.moves();
+  if (game.game_over() || game.in_draw() || moves.length === 0) return;
+
+  let best = Number.MIN_SAFE_INTEGER;
+  let bestMove;
+  for (let i = 0; i < moves.length; ++i) {
+      game.move(moves[i]);
+      const value = minimax(game, depth - 1, Number.MIN_SAFE_INTEGER, Number.MAX_SAFE_INTEGER, !wantMax);
+      game.undo();
+
+      if (value >= best) {
+          best = value;
+          bestMove = moves[i];
+      }
+  }
+  return bestMove;
+}
+
+export function minimax (game, depth, wantMax) {
+  if (depth === 0) return -evalGame(game);
+
+  if (wantMax) {
+    let value = Number.MIN_SAFE_INTEGER;
+    game.moves().forEach((move) => {
+      game.move(move);
+      value = Math.max(minimax(game, depth - 1, false));
+      game.undo();
+    })
+    return value;
+  } else {
+    let value = Number.MAX_SAFE_INTEGER;
+    game.moves().forEach((move) => {
+      game.move(move);
+      value = Math.min(minimax(game, depth - 1, true));
+      game.undo();
+    })
+    return value;
+  }
 }
 
 export function getAlphabetaBestMove (game, depth, wantMax) {
@@ -74,6 +116,8 @@ export function getBestMove (game, algorithm) {
   switch (algorithm) {
     case 'alpha-beta':
       return getAlphabetaBestMove(game, alphabetaDepth, true);
+    case 'minimax':
+      return getMinimaxBestMove(game, minimaxDepth, true);
     case 'random':
       return getRandomMove(game);
     default:
